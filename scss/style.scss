@@ -1,0 +1,161 @@
+*,
+*::before,
+*::after {
+	padding: 0;
+	margin: 0 auto;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #000;
+	min-height: 100vh;
+	display: grid;
+	place-items: center;
+	perspective: 800px;
+	overflow: hidden;
+
+	* {
+		transform-style: preserve-3d;
+	}
+}
+
+.scene {
+	position: relative;
+	transform: rotateX(-30deg) rotateY(-60deg);
+	font-size: 60px;
+	animation: sceneRotate 60s infinite linear;
+
+	@keyframes sceneRotate {
+		from {
+			transform: rotateX(-30deg) rotateY(0deg);
+		}
+		to {
+			transform: rotateX(-30deg) rotateY(360deg);
+		}
+	}
+}
+
+$duration: 12s;
+
+.column {
+	position: absolute;
+	transform: rotateY(var(--ry)) translateX(2.8em);
+
+	@for $i from 0 to 12 {
+		&:nth-child(#{$i + 1}) {
+			--ry: #{360deg / 12 * $i};
+
+			.box {
+				animation: boxRotate#{$i} $duration var(--delay) infinite ease-in-out,
+					boxTop#{$i} $duration var(--delay) infinite step-end, boxTranslate $duration var(--delay) infinite linear;
+			}
+		}
+
+		$p1: random(100) / 100 * 40;
+		$p2: $p1 + 4 + random(100) / 100 * 4;
+		$p3: $p2 + 2 + random(100) / 100 * 2;
+		$p4: $p3 + 2 + random(100) / 100 * 2;
+		$p5: $p4 + 2 + random(100) / 100 * 2;
+		$p6: $p5 + 2 + random(100) / 100 * 2;
+		$p7: $p6 + 4 + random(100) / 100 * 4;
+
+		@keyframes boxRotate#{$i} {
+			0%,
+			#{$p1}% {
+				rotate: 0.25turn;
+			}
+			#{$p2}%,
+			#{$p3}%,
+			#{$p4}%,
+			#{$p5}%,
+			#{$p6}% {
+				rotate: -0.25turn;
+				animation-timing-function: step-end;
+			}
+
+			#{$p2}%,
+			#{$p3}%,
+			#{$p4}%,
+			#{$p5}%,
+			#{$p6}% {
+				rotate: 0turn;
+			}
+			#{$p7}%,
+			100% {
+				rotate: -0.5turn;
+			}
+		}
+
+		@keyframes boxTop#{$i} {
+			0%,
+			#{$p1}% {
+				top: 0;
+			}
+			#{$p2}% {
+				top: -1em;
+			}
+			#{$p3}% {
+				top: -2em;
+			}
+			#{$p4}% {
+				top: -3em;
+			}
+			#{$p5}% {
+				top: -4em;
+			}
+			#{$p6}% {
+				top: -5em;
+			}
+		}
+	}
+}
+
+.box {
+	position: absolute;
+	width: 1em;
+	height: 1em;
+	transform-origin: top left;
+
+	@for $i from 0 to 6 {
+		&:nth-child(#{$i + 1}) {
+			--delay: #{$duration / -6 * $i};
+		}
+	}
+
+	@keyframes boxTranslate {
+		from {
+			translate: 0 1em;
+		}
+		to {
+			translate: 0 7em;
+		}
+	}
+
+	i {
+		--gap: 0.05em;
+		position: absolute;
+		inset: var(--gap);
+		background-color: #000d;
+		border: 2px dodgerblue solid;
+		box-shadow: 0 0 0.5em dodgerblue inset;
+
+		&:nth-child(1) {
+			transform: translateZ(calc(0.5em - var(--gap)));
+		}
+		&:nth-child(2) {
+			transform: rotateY(90deg) translateZ(calc(0.5em - var(--gap)));
+		}
+		&:nth-child(3) {
+			transform: rotateY(180deg) translateZ(calc(0.5em - var(--gap)));
+		}
+		&:nth-child(4) {
+			transform: rotateY(270deg) translateZ(calc(0.5em - var(--gap)));
+		}
+		&:nth-child(5) {
+			transform: rotateX(270deg) translateZ(calc(0.5em - var(--gap)));
+		}
+		&:nth-child(6) {
+			transform: rotateX(90deg) translateZ(calc(0.5em - var(--gap)));
+		}
+	}
+}
